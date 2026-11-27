@@ -1,0 +1,17 @@
+# clangd fallback for single-file competitive-programming sources.
+# Compiler stays g++-14 (driver mode), but clangd parses with its OWN
+# libc++ system headers. Do NOT use --query-driver here: it injects GCC's
+# libstdc++ headers, which clangd 20 cannot parse (std::ios 'aka int',
+# is_same<int,int> missing ::value, "too many errors").
+# -I/usr/local/include is the bits/stdc++.h shim; Mason's clangd does not
+# add that dir by default (Apple clangd 21 does), so list it explicitly.
+CompileFlags:
+  Compiler: /opt/homebrew/bin/g++-14
+  Remove:
+    - "-std=*"
+  Add:
+    - -I/usr/local/include
+    - -std=gnu++17
+    - -Wall
+    - -Wextra
+    - -Wno-main
